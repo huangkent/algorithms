@@ -1,2 +1,2 @@
 # algorithms
-a library of functions for algorithmic implementation
+a library of functions or demos for algorithmic implementation
