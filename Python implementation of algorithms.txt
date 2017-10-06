@@ -1,0 +1,747 @@
+###  Warm Up
+
+
+## compare the triplets
+
+# (Python2) raw_input() -- to input characters in a line
+# (python3) input() -- to input characters in a line
+# use .strip().split(' ') to trim out the spaces
+
+
+# Python 2:
+#!/bin/python
+
+import sys
+
+a0,a1,a2 = raw_input().strip().split(' ')
+a0,a1,a2 = [int(a0),int(a1),int(a2)]
+b0,b1,b2 = raw_input().strip().split(' ')
+b0,b1,b2 = [int(b0),int(b1),int(b2)]
+
+A = [a0,a1,a2]
+B = [b0,b1,b2]
+scoreA = 0
+scoreB = 0
+for i in range(3):	# don't use length(A), because it caused runtime error
+    if A[i] > B[i]:
+        scoreA += 1
+    elif A[i] < B[i]:
+        scoreB += 1
+print scoreA, scoreB
+
+# Python 3:
+#!/bin/python3
+
+import sys
+
+a0,a1,a2 = input().strip().split(' ')	# three characters obtained
+a0,a1,a2 = [int(a0),int(a1),int(a2)]
+b0,b1,b2 = input().strip().split(' ')
+b0,b1,b2 = [int(b0),int(b1),int(b2)]
+A = [a0,a1,a2]
+B = [b0,b1,b2]
+scoreA = 0
+scoreB = 0
+for i in range(3):
+    if A[i] > B[i]:
+        scoreA += 1
+    elif A[i] < B[i]:
+        scoreB += 1
+print(scoreA, scoreB)	# don't use +' '+, because it caused runtime error
+
+
+
+## Circular Array Rotation
+
+# k right-circular rotation operations on an input n-element array, print elements for q input indices
+
+
+# Python 2:  high runtime
+#!/bin/python
+
+import sys
+
+n,k,q = raw_input().strip().split(' ')
+n,k,q = [int(n),int(k),int(q)]
+a = map(int,raw_input().strip().split(' '))
+
+for j in range(k):
+    tmp = a[n-1]
+    i = n-1
+    while i > 0:
+        a[i] = a[i-1]
+        i -= 1
+    a[0] = tmp
+for a0 in xrange(q):
+    m = int(raw_input().strip())
+    print a[m]
+
+# Python 2:   relatively low runtime
+#!/bin/python
+import sys
+
+def rotate(a, n):
+    # a is a list, n is the number of rotations
+    return a[-n % len(a):] + a[:-n % len(a)]	# the elements shifted to the end + the elements shifted to the beginning
+
+n,k,q = raw_input().strip().split(' ')
+n,k,q = [int(n),int(k),int(q)]
+a = map(int,raw_input().strip().split(' '))
+a = rotate(a,k)
+for a0 in xrange(q):
+    m = int(raw_input().strip())
+    print a[m]
+
+# Python 2:    relatively low runtime
+#!/bin/python
+import sys
+
+n,k,q = raw_input().strip().split(' ')
+n,k,q = [int(n),int(k),int(q)]
+a = map(int,raw_input().strip().split(' '))	# works if a = [int(t) for t in raw_input().strip().split(' ')]
+
+for a0 in xrange(q):
+    m = int(raw_input().strip())	# .strip() isn't necessary
+    print a[(m-k)%n]	# after k right-rotation
+
+# Python 3:
+#!/bin/python3
+import sys
+
+n,k,q = input().strip().split(' ')
+n,k,q = [int(n),int(k),int(q)]
+a = [int(a_temp) for a_temp in input().strip().split(' ')]
+
+for a0 in range(q):
+    m = int(input().strip())	# .strip() is not necessary
+    print(a[(m-k)%n])	# after k right-rotation
+
+
+
+
+
+###  Implementation
+
+## Grid Search -- find a pattern in a grid
+
+# Python 3:   pass only if every row of the pattern occurs <= once in a row of the grid
+#!/bin/python3
+
+import sys
+
+t = int(input().strip())
+for a0 in range(t):
+    R,C = input().strip().split(' ')
+    R,C = [int(R),int(C)]
+    G = []
+    G_i = 0
+    for G_i in range(R):    # G is an array of strings (rows)
+       G_t = str(input().strip())
+       G.append(G_t)
+    r,c = input().strip().split(' ')
+    r,c = [int(r),int(c)]
+    P = []
+    P_i = 0
+    for P_i in range(r):    # G is an array of strings (rows)
+       P_t = str(input().strip())
+       P.append(P_t)
+
+    flag = 0
+    for G_i in range(R-r+1):
+        i2 = G[G_i].find(P[0])
+        if i2 != -1:
+            flag = 1    # P[0] is contained in G[G_i]
+            for P_i in range(1,r):
+                i1 = i2
+                i2 = G[G_i+P_i].find(P[P_i])
+                if i1 == i2:
+                    flag *= 1
+                else:
+                    flag *= 0   # P[P_i] is contained in G[G_i+P_i]
+                if flag == 0:
+                    break
+        if flag == 1:   # found a P in G
+            break
+    if flag == 0:
+        print ('NO')
+    else:
+        print ('YES')
+
+
+# Python 2:
+#!/bin/python
+
+import sys
+
+t = int(raw_input().strip())
+for a0 in xrange(t):
+    R,C = raw_input().strip().split(' ')
+    R,C = [int(R),int(C)]
+    G = []
+    G_i = 0
+    for G_i in xrange(R):
+       G_t = str(raw_input().strip())
+       G.append(G_t)
+    r,c = raw_input().strip().split(' ')
+    r,c = [int(r),int(c)]
+    P = []
+    P_i = 0
+    for P_i in xrange(r):
+       P_t = str(raw_input().strip())
+       P.append(P_t)
+
+    flag = 0
+    for G_i in range(R-r+1):
+        i2 = G[G_i].find(P[0])
+        if i2 != -1:
+            flag = 1    # P[0] is contained in G[G_i]
+            for P_i in range(1,r):
+                i1 = i2
+                i2 = G[G_i+P_i].find(P[P_i])
+                if i1 == i2:
+                    flag *= 1
+                else:
+                    flag *= 0   # P[P_i] is contained in G[G_i+P_i]
+                if flag == 0:
+                    break
+        if flag == 1:   # found a P in G
+            break
+    if flag == 0:
+        print ('NO')
+    else:
+        print ('YES')
+
+
+
+
+###  String
+
+## Anagram -- figure out how many replacements needed to make string 1 become string 2, given these two strings concatenated.
+
+# Python 2:
+n = input()
+for _ in xrange(n):
+    s = raw_input()
+    if len(s)%2:
+        print (-1)
+        continue
+    res = 0
+    for i in xrange(ord('a'), ord('z')+1):
+        res += min( s[:len(s)//2].count(chr(i)), s[len(s)//2:].count(chr(i)) )    # the total of common characters
+    print len(s)//2 - res    # the length of one string minus the total of common characters
+
+# or:
+n = input()
+for _ in xrange(n):
+    s = raw_input()
+    if len(s)%2:
+        print -1
+        continue
+    res = 0
+    for i in xrange(ord('a'), ord('z')+1):
+        res += min(s[:len(s)//2].count(chr(i)), s[len(s)//2:].count(chr(i)))
+    print len(s)//2-res
+
+
+
+
+
+
+###  Sorting
+
+
+
+# "Quick Sort - part 2"
+#  the simple version of quick sort is stable
+
+# Python 3:
+def QuickSort(ar, l, r):
+    if (r-l < 1):
+        return
+    k = l
+    for i in range(l + 1, r + 1):
+        if ar[i] < ar[l]:
+            k += 1
+            tmp = ar[k]
+            ar[k] = ar[i]
+            ar[i] = tmp
+    if k > l:
+        tmp = ar[l]
+        for i in range(l+1, k+1):
+            ar[i-1] = ar[i]
+        ar[k] = tmp
+    QuickSort(ar, l, k-1)
+    if (k-1-l >= 1):
+        printList(ar, l, k-1)
+    QuickSort(ar, k+1, r)
+    if (r-k-1 >= 1):
+        printList(ar, k+1, r)
+    printList(ar, l, r)   # r - l >= 1
+    
+def printList(ar, l, r):
+    S = ''
+    for i in range(l, r+1):
+        S = S.join(str(ar[i]))		# in the end S = str(ar[r])
+    print (S)
+
+N = int(input())
+ar = list(map(int, input().split()))
+QuickSort(ar, 0, len(ar) - 1)
+
+
+# Python 2:
+def QuickSort(ar, l, r):
+    if (r-l < 1):
+        return
+    k = l
+    for i in range(l + 1, r + 1):
+        if ar[i] < ar[l]:
+            k += 1
+            tmp = ar[k]
+            ar[k] = ar[i]
+            ar[i] = tmp
+    if k > l:
+        tmp = ar[l]
+        for i in range(l+1, k+1):
+            ar[i-1] = ar[i]
+        ar[k] = tmp
+    QuickSort(ar, l, k-1)
+    if (k-1-l >= 1):
+        printList(ar, l, k-1)
+    QuickSort(ar, k+1, r)
+    if (r-k-1 >= 1):
+        printList(ar, k+1, r)
+    printList(ar, l, r)   # r - l >= 1
+    
+def printList(ar, l, r):
+    S = ''
+    for i in range(l, r+1):
+        S = S.join(str(ar[i]))		# can't connect all the elements
+    print (S)
+
+raw_input()
+ar = list(map(int, raw_input().split()))
+QuickSort(ar, 0, len(ar) - 1)
+
+
+##  "QuickSort In Place":
+#   quick sort is not stable, since it scrambles around elements while sorting.
+
+# Python 3 code:
+def quickSortInPlace(ar, l, r):
+    if r > l:	# if the sublist has no more than 1 element, it's sorted
+        q = partition(ar, l, r)
+        printArray(ar)
+        
+        quickSortInPlace(ar, l, q-1)
+        quickSortInPlace(ar, q+1, r)
+        
+def partition(ar, l, r):
+    # l - start index, r - end index
+    # ar[r] is taken as the pivot
+    i = l - 1
+    for j in range(l, r):
+        if ar[j] <= ar[r]:
+            i += 1
+            tmp = ar[i]
+            ar[i] = ar[j]
+            ar[j] = tmp
+    # ar[i+1 .. r-1] is the subarray larger than the pivot
+    # place the pivot in ar[i+1]
+    tmp = ar[i+1]
+    ar[i+1] = ar[r]
+    ar[r] = tmp
+    return i+1
+
+def printArray(ar):
+    S = ' '.join(map(str, ar))
+    print (S)
+
+if __name__ == "__main__":
+    n = int(input())
+    ar = list(map(int, input().split()))
+    quickSortInPlace(ar, 0, n-1)
+
+
+# Python 2 code:
+def quickSortInPlace(ar, l, r):
+    if r > l:  # if the sublist contains no more than 1 element, it's sorted
+        q = partition(ar, l, r)
+        printArray(ar)
+       
+        quickSortInPlace(ar, l, q-1)
+        quickSortInPlace(ar, q+1, r)
+        
+def partition(ar, l, r):
+    # l - start index, r - end index
+    # ar[r] is taken as the pivot
+    i = l - 1
+    for j in range(l, r):
+        if ar[j] <= ar[r]:
+            i += 1
+            tmp = ar[i]
+            ar[i] = ar[j]
+            ar[j] = tmp
+    # ar[i+1 .. r-1] is the subarray larger than the pivot
+    # place the pivot in ar[i+1]
+    tmp = ar[i+1]
+    ar[i+1] = ar[r]
+    ar[r] = tmp
+    return i+1
+
+def printArray(ar):
+    S = ' '.join(map(str, ar))
+    print (S)
+
+if __name__ == "__main__":
+    n = int(raw_input())
+    ar = list(map(int, raw_input().split()))
+    quickSortInPlace(ar, 0, n-1)
+
+
+
+## "Sorted Subsegment"
+
+# Python 2:	too high runtime (the quicksort)
+def QuickSort(ar, l, r):
+    # quick sort executed in the given array
+    # recursion
+    
+    if (r-l < 1):
+        return
+    k = l
+    for i in range(l + 1, r + 1):
+        if ar[i] < ar[l]:
+            k += 1
+            tmp = ar[k]
+            ar[k] = ar[i]
+            ar[i] = tmp
+    if k > l:
+        tmp = ar[l]
+        for i in range(l+1, k+1):
+            ar[i-1] = ar[i]
+        ar[k] = tmp
+    QuickSort(ar, l, k-1)
+    QuickSort(ar, k+1, r)
+    
+if __name__ == "__main__":
+    
+    # input n, q, k in a line
+    # n - the # of integers in array A
+    # q - the # of queries
+    # k - an index in A
+    n, q, k = raw_input().split(' ')
+    n, q, k = [int(n), int(q), int(k)]
+    
+    A = map(int, raw_input().split(' '))
+        
+    for _ in range(q):
+        l, r = map(int, raw_input().split(' '))
+        QuickSort(A, l, r)
+
+    print A[k]
+
+
+
+
+
+###  Graph Theory
+
+##  Breadth First Search: Shortest Reach
+
+# Given an undirected graph consisting of N nodes (labelled 1 to N) where a specific given node S  represents the start position and any edge is of length 6  units, 
+# to calculate the shortest distance from start position (Node S) to all of the other nodes in the graph.
+
+# Python 3 code:
+import collections
+
+T = int(input())
+for _ in range(T):
+    N, M = map(int, input().split())
+    Adj = {}
+    for i in range(N):
+        Adj[i+1] = []
+    for i in range(M):
+        x, y = map(int, input().split())
+        Adj[x].append(y)
+        Adj[y].append(x)
+    S = int(input())
+
+    visit = {}
+    visit[S] = "true"
+
+    dist = {}
+    dist[S] = 0
+    for i in range(1, N+1):
+        if i != S:
+            dist[i] = -1
+
+    queue = collections.deque()
+    queue.append(S)
+    while queue:
+        u = queue.popleft()
+        for v in Adj[u]:
+            if v not in visit:
+                visit[v] = "true"
+                dist[v] = dist[u] + 6
+                queue.append(v)
+
+    st = ""
+    for i in range(1, N+1):
+        if i != S:
+            st = st + str(dist[i]) + " "
+
+    print (st)
+
+# Python 2 code:
+# Enter your code here. Read input from STDIN. Print output to STDOUT
+import collections
+
+T = int(raw_input())
+for _ in range(T):
+    N, M = map(int, raw_input().split())
+    Adj = {}
+    for i in range(N):
+        Adj[i+1] = []
+    for i in range(M):
+        x, y = map(int, raw_input().split())
+        Adj[x].append(y)
+        Adj[y].append(x)
+    S = int(raw_input())
+
+    visit = {}
+    visit[S] = "true"
+
+    dist = {}
+    dist[S] = 0
+    for i in range(1, N+1):
+        if i != S:
+            dist[i] = -1
+
+    queue = collections.deque()
+    queue.append(S)
+    while queue:
+        u = queue.popleft()
+        for v in Adj[u]:
+            if v not in visit:
+                visit[v] = "true"
+                dist[v] = dist[u] + 6
+                queue.append(v)
+
+    st = ""
+    for i in range(1, N+1):
+        if i != S:
+            st = st + str(dist[i]) + " "
+
+    print (st)
+
+
+
+
+
+
+###  Bit Manipulation
+
+## Lonely Integer --  the input array contains no more than 100 integers
+
+# Python2:
+#!/usr/bin/py
+
+def lonelyinteger(a):
+    answer = 0
+    A = [0 for x in range(101)]
+    for i in a:
+        A[i] += 1
+    for i in range(101):
+        if A[i] == 1:
+            answer = i
+    return answer
+if __name__ == '__main__':
+    a = input()
+    b = map(int, raw_input().strip().split())
+    print (lonelyinteger(b))
+
+# Python 3:
+def lonelyinteger(a):
+    answer = 0
+    A = [0 for x in range(101)]
+    for i in a:
+        A[i] += 1
+    for i in range(101):
+        if A[i] == 1:
+            answer = i
+    return answer
+if __name__ == '__main__':
+    a = input()
+    b = map(int, input().strip().split())
+    print (lonelyinteger(b))
+
+
+##  Maximizing Xor -- given an interval of integers, compute the max Xor within in it
+
+# Python 3: 
+def maxXor(l, r):
+    maxValue = 0
+    for i in range(l, r+1):
+        for j in range(i, r+1):
+            value = i ^ j
+            if maxValue < value:
+                maxValue = value
+    return maxValue
+
+if __name__ == '__main__':
+  l = int(input())
+  r = int(input())
+  print(maxXor(l, r))
+
+# Python 2:
+def maxXor(l, r):
+    maxValue = 0
+    for i in range(l, r+1):
+        for j in range(i, r+1):
+            value = i ^ j
+            if maxValue < value:
+                maxValue = value
+    return maxValue
+
+_l = int(raw_input());
+_r = int(raw_input());
+res = maxXor(_l, _r);
+print(res)
+
+
+
+## Flipping Bits -- input unsigned integers, flip their binary representations, print out the resulted integers
+
+# to calculate (x^bit_number - 1) - the input integer
+
+# Python 3:
+T = int(input())
+for i in range(T):
+    print (2**32 - 1- int(input()))
+
+# Python 2:
+T = int(raw_input())
+for i in range(T):
+    print (2**32 - 1- int(raw_input()))
+
+
+
+##  Cipher
+
+# Python 2:    (not passed due to the final output)
+from __future__ import division
+
+N, K = map(int, raw_input().split())
+s = int(raw_input())   # input the binary
+S = []
+for i in range(1, N+K): # convert the binary to array
+    S.append( s % (10**(N+K-i)) // 10**(N+K-i-1) )
+M = []  # initialization to decode the message
+M.append(S[0])
+for i in range(1, N):
+    for j in range(1, K):
+        if (i-j >= 0):
+            S[i] = S[i] ^ M[i-j]
+    M.append(S[i])
+for i in M:
+     print str(i),
+
+# Python 3:       (not passed due to the final output)
+from __future__ import division
+
+N, K = map(int, input().split())
+s = int(input())   # input the binary
+S = []
+for i in range(1, N+K): # convert the binary to array
+    S.append( s % (10**(N+K-i)) // 10**(N+K-i-1) )
+M = []  # initialization to decode the message
+M.append(S[0])
+for i in range(1, N):
+    for j in range(1, K):
+        if (i-j >= 0):
+            S[i] = S[i] ^ M[i-j]
+    M.append(S[i])
+for i in M:
+    print (i),
+
+
+
+## AND product -- compute the bitwise AND among all the natural numbers between integers A and B, both inclusive
+##		  note: 0<=A <= B<2^32
+
+# Python 2:
+T = int(raw_input())		# this code has high time complexity
+for _ in range(T):
+    A, B = map(int, raw_input().split())
+    ans = A & (A+1)
+    for i in range(A+2, B+1):
+        ans = ans & i
+    print (ans)
+
+# or:
+T = int(raw_input())
+for _ in range(T):
+    A, B = map(int, raw_input().split())
+    i = 0
+    while 2**i < B - A:
+        i += 1
+    ans = A & B & (0xFFFFFFFF^(2**i-1))		# 0<=A, B<2^32
+    print (ans)
+
+# Python 3:
+T = int(input())	# this code has high run time
+for _ in range(T):
+    A, B = map(int, input().split())
+    ans = A & (A+1)
+    for i in range(A+2, B+1):
+        ans = ans & i
+    print (ans)
+
+# or:
+T = int(input())
+for _ in range(T):
+    A, B = map(int, input().split())
+    i = 0
+    while 2**i < B - A:
+        i += 1
+    ans = A & B & (0xFFFFFFFF^(2**i-1))		# 0<=A, B<2^32
+    print (ans)
+
+
+## Counter game -- given a positive integer N, Louise and Richard reduce N alternatively based on a specifice rule; the winner will be the one 
+##		   who makes the last turn to reduce N to 1
+
+# Python 2:
+import math
+T = int(raw_input())
+for i in range(T):
+    N = int(raw_input())
+    turn = 0    # counts the turns of the game
+    while N > 1:
+        if N & (N-1) == 0:    # if N is a power of 2
+            N /= 2
+        else:
+            N = N & (2**(int(math.log(N, 2))) - 1)
+        turn += 1
+    if turn % 2 == 1:   # if the last turn is made by Louise
+        print ('Louise')
+    else:
+        print ('Richard')
+
+# Python 3:      (not passed due to run time problem)
+import math
+T = int(input())
+for i in range(T):
+    N = int(input())
+    turn = 0    # counts the turns of the game
+    while N > 1:
+        if N & (N-1) == 0:    # if N is a power of 2
+            N /= 2
+        else:
+            N = N & (2**(int(math.log(N, 2))) - 1)
+        turn += 1
+    if turn % 2 == 1:   # if the last turn is made by Louise
+        print ('Louise')
+    else:
+        print ('Richard')
