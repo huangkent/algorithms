@@ -1,5 +1,5 @@
 # algorithms
-a library of functions or demos for algorithmic implementation
+a library of functions, routines or demos for algorithmic implementation
 
 1) C_QuickSort_demos.rar
    coding: C
